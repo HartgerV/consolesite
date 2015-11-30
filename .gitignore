@@ -1,0 +1,8 @@
+bower_components
+node_modules
+workspace.xml
+vcs.xml
+scope_settings.xml
+modules.xml
+encodings.xml
+consolesite.iml

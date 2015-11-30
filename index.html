@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style/main.css">
+</head>
+<body class="ng-cloak" ng-app="app">
+
+    <div class="console ng-cloak" ng-controller="consoleCtrl">
+        <ul>
+            <li ng-repeat="line in content track by $index">
+                {{line.text}}
+                <a ng-repeat="item in line.actionitems track by $index" ng-click="doFunc(item.action)">{{item.name}}
+                </a>
+                <span class="cursor" ng-if="$last">{{cursor}}</span></li>
+        </ul>
+    </div>
+</body>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="app.js"></script>
+</html>

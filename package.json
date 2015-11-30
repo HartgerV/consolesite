@@ -1,0 +1,13 @@
+{
+  "name": "consolesite",
+  "version": "1.0.0",
+  "description": "Personal website in console style",
+  "main": "Gruntfile.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
