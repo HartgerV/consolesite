@@ -11,7 +11,7 @@
         <ul>
             <li ng-repeat="line in content track by $index">
                 {{line.text}}
-                <a ng-repeat="item in line.actionitems track by $index" ng-click="doFunc(item.action)">{{item.name}}
+                <a ng-repeat="item in line.actionitems track by $index" ng-click="doFunc(item.action,item.arguments)">{{item.name}}
                 </a>
                 <span class="cursor" ng-if="$last">{{cursor}}</span></li>
         </ul>

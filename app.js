@@ -55,7 +55,10 @@ angular.module('app',['ngRoute'])
             $scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "clear   ",150, $scope.websites);
             $location.path('/websites');
         };
-
+        $scope.redirectTo = function(target) {
+            var win = window.open(target, '_blank');
+            win.focus();
+        };
         $scope.addLine = function(prefix,line,speed,callback) {
             var index = $scope.content.length;
             $scope.content[index] ={text: prefix};
@@ -112,18 +115,31 @@ angular.module('app',['ngRoute'])
         };
         $scope.websites = function() {
             $scope.content = [];
-            var f10 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "(click any of the listed directories to navigate)",20);console.log($scope.content)};
-            var f9 = function(){
+            var f11 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "(click any of the listed directories to navigate)",20);console.log($scope.content)};
+            var f10 = function(){
                 var index = $scope.content.length;
                 $scope.content[index] = $scope.menu;
-                f10();
+                f11();
             };
-            var f8 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"ls",300,f9)};
-            var f7 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"cd ..",300,f8);$scope.path="~/app/public"};
-            var f6 = function(){$scope.addLine('http://www.everymusic.nl '," ",100,f7);};
-            var f5 = function(){$scope.addLine('http://stackoverflow.com/users/4550627/hartger '," ",100,f6);};
-            var f4 = function(){$scope.addLine('https://github.com/HartgerV/ '," ",100,f5);};
-            var f3 = function(){$scope.addLine('https://nl.linkedin.com/in/hartgerveeman '," ",100,f4);};
+            var f9 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"ls",300,f10)};
+            var f8 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"cd ..",300,f9);$scope.path="~/app/public"};
+            var f7 = function(){var index = $scope.content.length;
+                $scope.content[index] = {text:'Everymusic, a soundcloud based online music player (WIP): ', actionitems: [{name:'http://www.everymusic.nl',action:'redirectTo',arguments:'http://www.everymusic.nl'}]};
+                f8();
+            };
+            var f6 = function(){var index = $scope.content.length;
+                $scope.content[index] = {text:'Stackoverflow: ', actionitems: [{name:'http://stackoverflow.com/users/4550627/hartger',action:'redirectTo',arguments:'http://stackoverflow.com/users/4550627/hartger'}]};
+                f7();
+            };
+            var f5 = function(){var index = $scope.content.length;
+                $scope.content[index] = {text:'Github: ', actionitems: [{name:'https://github.com/HartgerV/',action:'redirectTo',arguments:'https://github.com/HartgerV/'}]};
+                f6();
+            };
+            var f4 = function(){var index = $scope.content.length;
+                $scope.content[index] = {text:'LinkedIn: ', actionitems: [{name:'https://nl.linkedin.com/in/hartgerveeman',action:'redirectTo',arguments:'https://nl.linkedin.com/in/hartgerveeman'}]};
+                f5();
+            };
+            var f3 = function(){$scope.addLine(' ',"My presence on the internet:",80,f4);};
             var f2 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"consume <(cat personalprojects schoolprojects socialmedia)",80,f3);};
             var f1 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"cd ~/app/public/websites",100,f2);$scope.path="app/public/websites";};
             f1();
