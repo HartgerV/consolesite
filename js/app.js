@@ -1,20 +1,8 @@
 /**
  * Created by hartger on 30/11/15.
  */
-angular.module('app',['ngRoute'])
-    .config(['$routeProvider', function($routeProvider) {
-        $routeProvider.
-            when('/home', {
-                action: "home()"
-            }).
-            when('profile', {
-                action: "profile()"
-            }).
-            otherwise({
-                redirectTo: '/phones'
-            });
-    }])
-    .controller('consoleCtrl',function($scope, $timeout, $injector, $location) {
+angular.module('app',[])
+    .controller('consoleCtrl',function($scope, $timeout, $injector, $location, $http) {
 
         $scope.doFunc = function(action, arguments) {
             if(angular.isFunction($scope[action])) {
@@ -27,7 +15,8 @@ angular.module('app',['ngRoute'])
         $scope.menu = {text:'',actionitems: [
             {name:'home',action:'goHome'},
             {name:'websites',action:'goWebsites'},
-            {name:'profile.json',action:'goProfile'}
+            {name:'profile.json',action:'goProfile'},
+            {name:'github',action:'goGithub'}
         ]};
         $scope.path = "~";
         $scope.content = [{text:'[visitor@HVeeman '+$scope.path+'] $> '}];
@@ -55,6 +44,10 @@ angular.module('app',['ngRoute'])
             $scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "clear   ",150, $scope.websites);
             $location.path('/websites');
         };
+        $scope.goGithub = function() {
+                $scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "clear   ",150, $scope.github);
+                $location.path('/github');
+        };
         $scope.redirectTo = function(target) {
             var win = window.open(target, '_blank');
             win.focus();
@@ -63,20 +56,51 @@ angular.module('app',['ngRoute'])
             var index = $scope.content.length;
             $scope.content[index] ={text: prefix};
             lineArr = line.split('');
-            var to = 0;
-            var i = lineArr.length;
-            console.log(lineArr.length)
-            lineArr.forEach(function(e) {
+            var to = speed;
+            async.eachSeries(lineArr,function(e,innercb) {
                 setTimeout(function(){
                     $scope.content[index].text += e;
-                    i--;
-                    if ((i==0) && callback != null) {
-                        callback();
-                    }
+                    innercb();
                 }, to);
-                to +=speed;
-            })
-        }
+            },callback)
+        };
+        $scope.addLines = function(prefix,lines,speed,callback) {
+            async.eachSeries(lines,function(line,outercb) {
+                if(typeof line == "undefined"){
+                        outercb;
+                }
+                else {
+                        var index = $scope.content.length;
+                        $scope.content[index] = {text: prefix};
+                        lineArr = line.toString().split('');
+                        var to = speed;
+                        async.eachSeries(lineArr, function (e, innercb) {
+                            setTimeout(function () {
+                                $scope.content[index].text += e;
+                                innercb();
+                            }, to);
+                        }, outercb)
+                    }
+            },callback);
+        };
+        $scope.showMenu= function(callback){
+            var f3 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "(click any of the listed directories to navigate)",20,callback || null)};
+            var f2 = function(){
+                var index = $scope.content.length;
+                $scope.content[index] = $scope.menu;
+                f3();
+            };
+            var f1 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"ls ",300,f2)};
+            f1();
+        };
+        $scope.github = function() {
+            $scope.content = [];
+            var f1 = function(){$http.get('http://api.github.com/users/hartgerv').then(function(data){
+                var arr = Object.keys(data.data).map(function (key) {return key+": "+data.data[key]});
+                $scope.addLines('', arr,0,$scope.showMenu);
+            })};
+            $scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "curl -i https://api.github.com/users/hartgerv",50, f1);
+        };
         $scope.profile = function() {
             function calculateAge(dateString) {
                 var today = new Date();
@@ -89,33 +113,50 @@ angular.module('app',['ngRoute'])
                 return age;
             }
             $scope.content = [];
-            var f17 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "(click any of the listed directories to navigate)",20);console.log($scope.content)};
-            var f16 = function(){
-                var index = $scope.content.length;
-                $scope.content[index] = $scope.menu;
-                f17();
-            };
-            var f15 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"ls ",300,f16)};
-            var f14 = function(){$scope.addLine('} ',"  ",300,f15)};
-            var f13 = function(){$scope.addLine('  "description": "The field of IT is an ever evolving landscape. The rapid progression of technologies inspires me. I would like to be part of this progression.During my studies I work on developing a broad set of skills. I aim to be a flexible professional that can adapt to a fast changing work-field. Besides software engineering, the main focus of my education, I also take part in interdisciplinary courses and workshops. I have chaired multiple committees in my student union, which helped me grow my organisational skills.Right now I am looking for opportunities to learn and further develop my skills in the field of software engineering and web development. During my studies I am available for a part time job." } '," ",300,f14)};
-            var f12 = function(){$scope.addLine('  "contact": "HartgerVeeman@gmail.com",'," ",300,f13)};
-            var f11 = function(){$scope.addLine('  ],'," ",300,f12)};
-            var f10 = function(){$scope.addLine('     "artificial intelligence",'," ",300,f11)};
-            var f9 = function(){$scope.addLine('      "back-end webdevelopment",'," ",300,f10)};
-            var f8 = function(){$scope.addLine('      "front-end webdevelopment",'," ",300,f9)};
-            var f7 = function(){$scope.addLine('  "interests": ['," ",300,f8)};
-            var f6 = function(){$scope.addLine('  "location": "Groningen, the Netherlands",'," ",300,f7)};
-            var f5 = function(){$scope.addLine('  "age": '+calculateAge("1992-6-18")+', '," ",300,f6)};
-            var f4 = function(){$scope.addLine('  "occupation": "Software Engineering Student",'," ",300,f5)};
-            var f3 = function(){$scope.addLine('  "name" : "Hartger Veeman",  '," ",300,f4)};
-            var f2 = function(){$scope.addLine('{ '," ",300,f3)};
-
+            var f2 = function(){$scope.addLines('',[
+                '{',
+                '"name" : "Hartger Veeman",',
+                '"occupation": "Software Engineering Student",',
+                '"age": '+calculateAge("1992-6-18")+', ',
+                '"location": "Groningen, the Netherlands",',
+                '"contact": "HartgerVeeman@gmail.com",',
+                '"description": "Hi! I am Hartger, a software engineering student from Groningen, the Netherlands. To me the field of IT is an ever evolving landscape. The rapid progression of technologies inspires me. I would like to be part of this progression. During my studies I work on developing a broad set of skills. I aim to be a flexible professional that can adapt to a fast changing work-field. Besides software engineering, the main focus of my education, I also take part in interdisciplinary courses and workshops. I have chaired multiple committees in my student union, which helped me grow my organisational skills.Right now I am looking for opportunities to learn and further develop my skills in the field of software engineering and web development. During my studies I am available for a part time job." } ',
+                '"interests": [',
+                '"front-end webdevelopment",',
+                '"back-end webdevelopment",',
+                '"artificial intelligence"',
+                '],',
+                '"skills": [',
+                '{"Javascript": [',
+                '"Front-end and back-end webdevelopment in javascript",',
+                '"AngularJS",',
+                '"jQuery",',
+                '"NodeJS"',
+                ']},',
+                '{"Php": [',
+                '"Laravel"',
+                ']},',
+                '{"Java": [',
+                '"OOP"',
+                ']},',
+                '{"C": [',
+                '"Imperative programming"',
+                ']},',
+                '{"Misc.: ["',
+                '"HTML",',
+                '"CSS",',
+                '"Linux"',
+                ']}',
+                ']',
+                '"Hobbies": ["music production","philosophy"],',
+                '} '
+                ],0,$scope.showMenu)};
             var f1 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"cat profile.json",150,f2);$scope.path="app/public";};
             f1();
         };
         $scope.websites = function() {
             $scope.content = [];
-            var f11 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "(click any of the listed directories to navigate)",20);console.log($scope.content)};
+            var f11 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ', "(click any of the listed directories to navigate)",20)};
             var f10 = function(){
                 var index = $scope.content.length;
                 $scope.content[index] = $scope.menu;
@@ -153,7 +194,7 @@ angular.module('app',['ngRoute'])
                 f6()
             };
             var f4 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"ls",300,f5)};
-            var f3 = function(){$scope.addLine('"Hi, I am Hartger! Welcome to my personal website. I am a software engineering student from Groningen, the Netherlands. This site contains information about me and the software engineering related things I have done."', "  ",300,f4)};
+            var f3 = function(){$scope.addLine('"Hi, I am Hartger! Welcome to my personal website. I am a software engineering student from Groningen, the Netherlands. This site contains information about me and the software engineering related things I do."', "  ",300,f4)};
             var f2 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"echo $WELCOME_MESSAGE",100,f3)};
             var f1 = function(){$scope.addLine('[visitor@HVeeman '+$scope.path+'] $> ',"cd ~/app/public",100,f2);$scope.path="app/public";};
             f1();
@@ -180,6 +221,9 @@ angular.module('app',['ngRoute'])
                 break;
             case "/websites":
                 $scope.websites();
+                break;
+            case "/github":
+                $scope.github();
                 break;
             default:
                 $scope.init();

@@ -3,13 +3,13 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" type="text/css" href="style/main.css">
+    <link rel="stylesheet" type="text/css" href="dest/style/main.css">
 </head>
-<body class="ng-cloak" ng-app="app">
+<body class="ng-cloak" ng-app="app" >
 
     <div class="console ng-cloak" ng-controller="consoleCtrl">
-        <ul>
-            <li ng-repeat="line in content track by $index">
+        <ul id="lines">
+            <li data-text="{{line.text}}" ng-repeat="line in content track by $index">
                 {{line.text}}
                 <a ng-repeat="item in line.actionitems track by $index" ng-click="doFunc(item.action,item.arguments)">{{item.name}}
                 </a>
@@ -19,5 +19,9 @@
 </body>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-route/angular-route.min.js"></script>
-<script src="app.js"></script>
+<script src="bower_components/async/dist/async.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<!--<script src="js/app.js"></script>-->
+<script src="dest/js/app.js"></script>
+<script src="dest/js/glitch.js"></script>
 </html>

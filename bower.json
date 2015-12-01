@@ -1,0 +1,23 @@
+{
+  "name": "consolesite",
+  "version": "1.0.0",
+  "homepage": "https://github.com/HartgerV/consolesite",
+  "authors": [
+    "HartgerV <hartgerveeman@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "~1.4.8",
+    "angular": "~1.4.8",
+    "async": "~1.5.0",
+    "grunt": "~0.4.5",
+    "jquery": "~2.1.4"
+  }
+}
