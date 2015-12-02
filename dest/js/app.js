@@ -212,5 +212,4 @@ angular.module("app", []).controller("consoleCtrl", function($scope, $timeout, $
       default:
         $scope.init();
     }
-    console.log($location.path());
 });

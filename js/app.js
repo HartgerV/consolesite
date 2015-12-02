@@ -229,8 +229,4 @@ angular.module('app',[])
                 $scope.init();
                 break;
         }
-
-
-        console.log($location.path());
-
-    })
+    });

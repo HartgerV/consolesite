@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="dest/style/main.css">
+    <link rel="stylesheet" type="text/css" href="dest/style/glitch.css">
 </head>
 <body class="ng-cloak" ng-app="app" >
-
+    <div id="wrapper" style="position:absolute;background-color:rgba(0,0,0,0.8);height:100%;width:100%">
     <div class="console ng-cloak" ng-controller="consoleCtrl">
         <ul id="lines">
             <li data-text="{{line.text}}" ng-repeat="line in content track by $index">
@@ -15,6 +16,8 @@
                 </a>
                 <span class="cursor" ng-if="$last">{{cursor}}</span></li>
         </ul>
+    </div>
+    <div id="glitchcontainer" style="position:absolute;overflow:hidden;height:100%;width:100%"></div>
     </div>
 </body>
 <script src="bower_components/angular/angular.js"></script>
