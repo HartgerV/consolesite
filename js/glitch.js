@@ -27,18 +27,18 @@ function clrtextglitch() {
 }
 function scanglitch() {
         var e = $('#wrapper').clone().appendTo('#glitchcontainer');
-        var i = 0;
-        e.css({"clip": "rect(" + i + "px,3830px," + (i + 15) + "px,0px)"});
-        e.css("z-index",200);
-        var interval = setInterval(function () {
-            e.css({"clip": "rect(" + i + "px,3830px," + (i + 15) + "px,0px)"});
-            e.css({"left": Math.round(Math.random() * 10) + "px"});
-            i+=4;
-            if (i > window.innerHeight) {
-                e.remove();
-                window.clearInterval(interval);
-            }
-        }, 40);
+        e.addClass('scanglitch');
+        e.transit({
+            "clip": "rect(" + (window.innerHeight-15) + "px,3830px," + (window.innerHeight) + "px,0px)"
+        },3500,'ease-in',function(){e.remove();});
+        function loop() {
+            var i = Math.round(Math.random() * 10);
+            e.css({
+                "translate": i + "px"
+            });
+            requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
 }
 function verticalscreentear() {
         var c = $('.console');
@@ -71,4 +71,19 @@ function horizontalscreentear() {
         e.remove();
         c.css("clip", "auto");
     }, 100);
+}
+function glitchcanvas() {
+    var canvas = document.getElementById("test");
+    var context = canvas.getContext('2d');
+
+    domvas.toImage(document.getElementById("console"), function() {
+        context.drawImage(this, 20,20);
+    });
+    var image_data = context.getImageData( 0, 0, canvas.clientWidth, canvas.clientHeight );
+    var parameters = { amount: 10, seed: 45, iterations: 30, quality: 30 };
+    function drawGlitchedImageData(image_data) {
+        context.putImageData(image_data, 0, 0);
+    }
+
+    glitch(image_data, parameters, drawGlitchedImageData);
 }

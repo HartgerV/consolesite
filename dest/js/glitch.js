@@ -9,17 +9,18 @@ function clrtextglitch() {
 }
 
 function scanglitch() {
-    var e = $("#wrapper").clone().appendTo("#glitchcontainer"), i = 0;
-    e.css({
-        clip: "rect(" + i + "px,3830px," + (i + 15) + "px,0px)"
-    }), e.css("z-index", 200);
-    var interval = setInterval(function() {
+    function loop() {
+        var i = Math.round(10 * Math.random());
         e.css({
-            clip: "rect(" + i + "px,3830px," + (i + 15) + "px,0px)"
-        }), e.css({
-            left: Math.round(10 * Math.random()) + "px"
-        }), i += 4, i > window.innerHeight && (e.remove(), window.clearInterval(interval));
-    }, 40);
+            translate: i + "px"
+        }), requestAnimationFrame(loop);
+    }
+    var e = $("#wrapper").clone().appendTo("#glitchcontainer");
+    e.addClass("scanglitch"), e.transit({
+        clip: "rect(" + (window.innerHeight - 15) + "px,3830px," + window.innerHeight + "px,0px)"
+    }, 3500, "ease-in", function() {
+        e.remove();
+    }), requestAnimationFrame(loop);
 }
 
 function verticalscreentear() {
@@ -50,6 +51,23 @@ function horizontalscreentear() {
     setTimeout(function() {
         e.remove(), c.css("clip", "auto");
     }, 100);
+}
+
+function glitchcanvas() {
+    function drawGlitchedImageData(image_data) {
+        context.putImageData(image_data, 0, 0);
+    }
+    var canvas = document.getElementById("test"), context = canvas.getContext("2d");
+    domvas.toImage(document.getElementById("console"), function() {
+        context.drawImage(this, 20, 20);
+    });
+    var image_data = context.getImageData(0, 0, canvas.clientWidth, canvas.clientHeight), parameters = {
+        amount: 10,
+        seed: 45,
+        iterations: 30,
+        quality: 30
+    };
+    glitch(image_data, parameters, drawGlitchedImageData);
 }
 
 setInterval(function() {
